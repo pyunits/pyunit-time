@@ -133,19 +133,21 @@ class TimeUnit:
         """该方法识别时间表达式单元的年字段"""
 
         # 一位数和三位表示的年份
-        for rule in ['(?<![0-9])[0-9]{1}(?=年)', '(?<![0-9])[0-9]{3}(?=年)']:
+        for rule in ['(?<![0-9])[0-9]{3}(?=年)', '(?<![0-9])[0-9]{1}(?=年)']:
             match = re.search(rule, self.exp_time)
             if match is not None:
                 self.normalizer.isTimeSpan = True
                 year = int(match.group())
                 self.tp.unit[0] = year
+                break
 
         # 两位和四位数表示的年份
-        for rule in ['[0-9]{2}(?=年)', '[0-9]{4}(?=年)']:
+        for rule in ['[0-9]{4}(?=年)', '[0-9]{2}(?=年)']:
             match = re.search(rule, self.exp_time)
             if match is not None:
                 year = int(match.group())
                 self.tp.unit[0] = year
+                break
 
     def norm_set_month(self):
         """该方法识别时间表达式单元的月字段 """
@@ -325,7 +327,7 @@ class TimeUnit:
             self.prefer_future(3)
             self.isAllDayTime = False
 
-        rule = r'([0-9]?[0-9]?[0-9]{2}).(10|11|12|[1-9]).([0-3][0-9]|[1-9])'  # 匹配年月日
+        rule = r'([0-9]{2,4})\D(10|11|12|[1-9])\D([0-3][0-9]|[1-9])'  # 匹配年月日
         match = re.search(rule, self.exp_time)
         if match is not None:
             year, month, day = match.group(1), match.group(2), match.group(3)

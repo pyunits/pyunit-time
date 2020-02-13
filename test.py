@@ -14,15 +14,15 @@ def test():
     np = CharactersTime('2019-12-19 00:00:00').parse('今年儿童节晚上九点一刻')
     print(np)  # ['2019-06-01 21:15:00']
     np = CharactersTime('2019-12-19 00:00:00').parse('今天中午十二点')
-    print(np)  # ['2019-12-09 12:00:00']
+    print(np)  # ['2019-12-19 12:00:00']
     np = CharactersTime('2019-12-19 00:00:00').parse('明年春节')
     print(np)  # ['2020-01-25 00:00:00']
     np = CharactersTime('2019-12-19 00:00:00').parse('下下下个星期五早上7点半')
     print(np)  # ['2020-01-10 07:30:00']
     np = CharactersTime('2019-12-19 00:00:00').parse('今年的大寒')
     print(np)  # ['2020-01-20 00:00:00']
-    np = CharactersTime('2019-12-19 00:00:00').parse('189号')
-    print(np)  # []
+    np = CharactersTime('2019-12-19 00:00:00').parse('2019年12月')
+    print(np)  # ['2019-12-01 00:00:00']
 
 
 if __name__ == '__main__':

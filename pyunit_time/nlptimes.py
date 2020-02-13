@@ -28,6 +28,7 @@ class CharactersTime:
         self.invalidSpan = False
         self.timeSpan = ''
         self.timeBase = replace(r'\W+', '-', time_base) if time_base else time.strftime('%Y-%m-%d-%H-%M-%S')
+        self.time_re = []
 
     def parse(self, target) -> list:
         """解析时间"""
@@ -36,6 +37,7 @@ class CharactersTime:
         time_token = self._ex(input_query)
         for res in time_token:
             rt = res.time
+            self.time_re.append(res.exp_time)
             if rt:
                 times.append(rt.format("YYYY-MM-DD HH:mm:ss"))
         return times
