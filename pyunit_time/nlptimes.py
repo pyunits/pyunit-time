@@ -24,9 +24,6 @@ class CharactersTime:
         self.timeBase = None
         self.solar_holiday = Solar_Holiday
         self.lunar_holiday = Lunar_Holiday
-        self.isTimeSpan = False
-        self.invalidSpan = False
-        self.timeSpan = ''
         self.timeBase = replace(r'\W+', '-', time_base) if time_base else time.strftime('%Y-%m-%d-%H-%M-%S')
         self.time_re = []
 

@@ -66,50 +66,7 @@ class TimeUnit:
         self.norm_set_lunar_holiday()
         self.modify_time_base()
         self.tp_origin.unit = copy.deepcopy(self.tp.unit)
-
-        # 判断是时间点还是时间区间
-        flag = True
-        for i in range(0, 4):
-            if self.tp.unit[i] != -1:
-                flag = False
-        if flag:
-            self.normalizer.isTimeSpan = True
-
-        if self.normalizer.isTimeSpan:
-            days = 0
-            if self.tp.unit[0] > 0:
-                days += 365 * self.tp.unit[0]
-            if self.tp.unit[1] > 0:
-                days += 30 * self.tp.unit[1]
-            if self.tp.unit[2] > 0:
-                days += self.tp.unit[2]
-            unit = self.tp.unit
-            for i in range(3, 6):
-                if self.tp.unit[i] < 0:
-                    unit[i] = 0
-            seconds = unit[3] * 3600 + unit[4] * 60 + unit[5]
-            if seconds == 0 and days == 0:
-                self.normalizer.invalidSpan = True
-            self.normalizer.timeSpan = self.gen_span(days, seconds)
-            return None
-
-        time_grid = self.normalizer.timeBase.split('-')
-        unit_pointer = 5
-        while unit_pointer >= 0 and self.tp.unit[unit_pointer] < 0:
-            unit_pointer -= 1
-        for i in range(unit_pointer):
-            if self.tp.unit[i] < 0:
-                self.tp.unit[i] = int(time_grid[i])
         self.time = self.gen_time(self.tp.unit)
-
-    @staticmethod
-    def gen_span(days, seconds):
-        """根据毫秒获取时分秒"""
-        day = int(seconds / (3600 * 24))
-        h = int((seconds % (3600 * 24)) / 3600)
-        m = int(((seconds % (3600 * 24)) % 3600) / 60)
-        s = int(((seconds % (3600 * 24)) % 3600) % 60)
-        return str(days + day) + ' days, ' + '%d:%02d:%02d' % (h, m, s)
 
     @staticmethod
     def gen_time(unit):
@@ -131,23 +88,18 @@ class TimeUnit:
 
     def norm_set_year(self):
         """该方法识别时间表达式单元的年字段"""
-
-        # 一位数和三位表示的年份
-        for rule in ['(?<![0-9])[0-9]{3}(?=年)', '(?<![0-9])[0-9]{1}(?=年)']:
-            match = re.search(rule, self.exp_time)
-            if match is not None:
-                self.normalizer.isTimeSpan = True
-                year = int(match.group())
-                self.tp.unit[0] = year
-                break
-
         # 两位和四位数表示的年份
-        for rule in ['[0-9]{4}(?=年)', '[0-9]{2}(?=年)']:
+        for rule in ['[0-9]{4}(?=[年-])', '[0-9]{2}(?=[年-])']:
             match = re.search(rule, self.exp_time)
             if match is not None:
                 year = int(match.group())
                 self.tp.unit[0] = year
                 break
+
+        if 30 <= self.tp.unit[0] < 100:
+            self.tp.unit[0] += 1900
+        if 0 < self.tp.unit[0] < 30:
+            self.tp.unit[0] += 2000
 
     def norm_set_month(self):
         """该方法识别时间表达式单元的月字段 """
@@ -157,10 +109,14 @@ class TimeUnit:
             self.tp.unit[1] = int(match.group())
             # 处理倾向于未来时间的情况
             self.prefer_future(1)
+        rule = r'\d{2,4}[年-](10|11|12|0?[1-9])(?!\d)'
+        match = re.search(rule, self.exp_time)
+        if match is not None:
+            self.tp.unit[1] = int(match.group(1))
 
     def norm_set_month_fuzzy_day(self):
         """兼容模糊写法:该方法识别时间表达式单元的月、日字段"""
-        rule = '((10)|(11)|(12)|([1-9]))(月|\\.|\\-)([0-3][0-9]|[1-9])'
+        rule = r'(?<!\d)(10|11|12|0?[1-9])[月.-]([0-3][0-9]|[1-9])'
         match = re.search(rule, self.exp_time)
         if match is not None:
             match_str = match.group()
@@ -327,14 +283,6 @@ class TimeUnit:
             self.prefer_future(3)
             self.isAllDayTime = False
 
-        rule = r'([0-9]{2,4})\D(10|11|12|[1-9])\D([0-3][0-9]|[1-9])'  # 匹配年月日
-        match = re.search(rule, self.exp_time)
-        if match is not None:
-            year, month, day = match.group(1), match.group(2), match.group(3)
-            self.tp.unit[0] = int(year)
-            self.tp.unit[1] = int(month)
-            self.tp.unit[2] = int(day)
-
     def norm_set_span_related(self):
         """设置时间长度相关的时间表达式"""
         cur, t = self.get_date(), self.exp_time
@@ -374,7 +322,6 @@ class TimeUnit:
         rule = '\\d+(?=(个)?(周|星期|礼拜)(?![以之]?[前后]))'
         match = re.search(rule, self.exp_time)
         if match is not None:
-            self.normalizer.isTimeSpan = True
             week = int(match.group())
             if self.tp.unit[2] == -1:
                 self.tp.unit[2] = 0
@@ -573,19 +520,18 @@ class TimeUnit:
 
     def modify_time_base(self):
         """该方法用于更新timeBase使之具有上下文关联性"""
-        if not self.normalizer.isTimeSpan:
-            if 30 <= self.tp.unit[0] < 100:
-                self.tp.unit[0] += 1900
-            if 0 < self.tp.unit[0] < 30:
-                self.tp.unit[0] += 2000
-            time_grid = self.normalizer.timeBase.split('-')
-            arr = []
-            for i in range(0, 6):
-                if self.tp.unit[i] == -1:
-                    arr.append(str(time_grid[i]))
-                else:
-                    arr.append(str(self.tp.unit[i]))
-            self.normalizer.timeBase = '-'.join(arr)
+        if 30 <= self.tp.unit[0] < 100:
+            self.tp.unit[0] += 1900
+        if 0 < self.tp.unit[0] < 30:
+            self.tp.unit[0] += 2000
+        time_grid = self.normalizer.timeBase.split('-')
+        arr = []
+        for i in range(0, 6):
+            if self.tp.unit[i] == -1:
+                arr.append(str(time_grid[i]))
+            else:
+                arr.append(str(self.tp.unit[i]))
+        self.normalizer.timeBase = '-'.join(arr)
 
     def prefer_future_week(self, weekday, cur):
         """预测下一个周的时间
