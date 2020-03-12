@@ -72,19 +72,14 @@ class TimeUnit:
     def gen_time(unit):
         """得到时间"""
         time = arrow.get('1970-01-01 00:00:00')
-        if unit[0] > 0:
-            time = time.replace(year=int(unit[0]))
-        if unit[1] > 0:
-            time = time.replace(month=unit[1])
-        if unit[2] > 0:
-            time = time.replace(day=unit[2])
-        if unit[3] > 0:
-            time = time.replace(hour=unit[3])
-        if unit[4] > 0:
-            time = time.replace(minute=unit[4])
-        if unit[5] > 0:
-            time = time.replace(second=unit[5])
-        return time
+        names = {}
+        for i, name in zip(range(6), ['year', 'month', 'day', 'hour', 'minute', 'second']):
+            if unit[i] != -1:
+                names[name] = unit[i]
+        if names:
+            time = time.replace(**names)
+            return time
+        return []
 
     def norm_set_year(self):
         """该方法识别时间表达式单元的年字段"""

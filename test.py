@@ -5,7 +5,7 @@
 from pyunit_time import CharactersTime
 
 
-def test():
+def time():
     """字符字符串时间解析"""
     np = CharactersTime('2019-12-19 00:00:00').parse('国庆节的前一天晚上8点半')
     print(np)  # ['2019-09-29 20:30:00']
@@ -26,7 +26,8 @@ def test():
     print(CharactersTime('2019-12-19 00:00:00').parse('19-2-2'))  # ['2019-02-02 00:00:00']
     print(CharactersTime('2019-12-19 00:00:00').parse('2020-2'))  # ['2020-02-01 00:00:00']
     print(CharactersTime('2019-12-19 00:00:00').parse('8年前'))  # ['2011-12-19 00:00:00']
+    print(CharactersTime('2019-12-19 00:00:00').parse('最近'))  # []
 
 
 if __name__ == '__main__':
-    test()
+    time()
