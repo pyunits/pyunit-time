@@ -27,6 +27,8 @@ def time():
     print(CharactersTime('2019-12-19 00:00:00').parse('2020-2'))  # ['2020-02-01 00:00:00']
     print(CharactersTime('2019-12-19 00:00:00').parse('8年前'))  # ['2011-12-19 00:00:00']
     print(CharactersTime('2019-12-19 00:00:00').parse('最近'))  # []
+    print(CharactersTime('2019-12-19 00:00:00').parse('三天以后'))  # ['2019-12-22 00:00:00']
+    print(CharactersTime('2019-12-19 00:00:00').parse('三天之内'))  # ['2019-12-22 00:00:00']
 
 
 if __name__ == '__main__':

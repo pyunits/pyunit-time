@@ -282,12 +282,12 @@ class TimeUnit:
         """设置时间长度相关的时间表达式"""
         cur, t = self.get_date(), self.exp_time
         flag = [False, False, False, False, False, False]
-        rule_0 = r'\d+(?=年[以之]?[前后])', 0
-        rule_1 = r'\d+(?=个?月[以之]?[前后])', 1
-        rule_2 = r'\d+(?=(天|日|号)[以之]?[前后])', 2
-        rule_3 = r'\d+(?=个?小时[以之]?[前后])', 3
-        rule_4 = r'\d+(?=分钟?[以之]?[前后])', 4
-        rule_5 = r'\d+(?=秒钟?[以之]?[前后])', 5
+        rule_0 = r'\d+(?=年[以之]?[前后内])', 0
+        rule_1 = r'\d+(?=个?月[以之]?[前后内])', 1
+        rule_2 = r'\d+(?=(天|日|号)[以之]?[前后内])', 2
+        rule_3 = r'\d+(?=个?小时[以之]?[前后内])', 3
+        rule_4 = r'\d+(?=分钟?[以之]?[前后内])', 4
+        rule_5 = r'\d+(?=秒钟?[以之]?[前后内])', 5
         for rule, index in [rule_0, rule_1, rule_2, rule_3, rule_4, rule_5]:
             match = re.search(rule, t)
             if match is not None:
@@ -458,26 +458,6 @@ class TimeUnit:
         cur = self._set_time('明天', cur, flag, 2, days=1)
         cur = self._set_time('后天', cur, flag, 2, days=2)
         cur = self._set_time('大后天|外天', cur, flag, 2, days=3)
-        for rule in ['\\d+(?=天[以之]?前)', '\\d+(?=天[以之]?后)']:
-            match = re.search(rule, t)
-            if match is not None:
-                day = int(match.group())
-                day = -day if t.find('前') > -1 else day
-                cur = self._set_time(rule, cur, flag, 2, days=day)
-
-        for rule in ['\\d+(?=(个)?月[以之]?前)', '\\d+(?=(个)?月[以之]?后)']:
-            match = re.search(rule, t)
-            if match is not None:
-                month = int(match.group())
-                month = -month if t.find('前') > -1 else month
-                cur = self._set_time(rule, cur, flag, 1, months=month)
-
-        for rule in ['\\d+(?=年[以之]?前)', '\\d+(?=年[以之]?后)']:
-            match = re.search(rule, t)
-            if match is not None:
-                year = int(match.group())
-                year = -year if t.find('前') > -1 else year
-                cur = self._set_time(rule, cur, flag, 0, years=year)
 
         for rule, lens in [('(?<=(上+个?(周|星期)))[1-7]?', '(上+)个?(?:周|星期)'),
                            ('(?<=(下+个?(周|星期)))[1-7]?', '(下+)个?(?:周|星期)')]:
