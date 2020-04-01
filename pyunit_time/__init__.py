@@ -4,7 +4,7 @@
 # @Author: Jtyoui@qq.com
 from .nlptimes import CharactersTime  # NLP时间解析
 
-__version__ = '2020.3.12'
+__version__ = '2020.4.1'
 __author__ = 'Jtyoui'
 __description__ = '大型正则解析时间'
 __email__ = 'jtyoui@qq.com'

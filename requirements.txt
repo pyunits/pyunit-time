@@ -1,5 +1,3 @@
 arrow==0.13.1
-python-dateutil==2.8.1
 pyunit-calendar==2019.5.9
 regex==2019.11.1
-six==1.14.0
