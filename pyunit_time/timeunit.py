@@ -427,11 +427,18 @@ class TimeUnit:
 
     def get_date(self):
         """获取当前日期，并转为标准日期格式"""
-        if self.tp.unit[0] > 0 and self.tp.unit[1] > 0 and self.tp.unit[2] > 0:
+        y, mon, d, h, m, s = self.tp.unit
+        if y > 0 and mon > 0 and d > 0:
             o = (str(i) for i in self.tp.unit[0:3])
             cur = arrow.get('-'.join(o), 'YYYY-M-D')
         else:
-            cur = arrow.get(self.normalizer.timeBase, 'YYYY-M-D')
+            cur = arrow.get(self.normalizer.timeBase, 'YYYY-M-D-H-m-s')
+            if h > 0:
+                cur = cur.replace(hours=h)
+            elif m > 0:
+                cur = cur.replace(minutes=m)
+            elif s > 0:
+                cur = cur.replace(seconds=s)
         return cur
 
     def norm_set_cur_related(self):
