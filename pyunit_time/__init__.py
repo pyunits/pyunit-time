@@ -1,12 +1,12 @@
-#!/usr/bin/python3.7
+# !/usr/bin/python3.8
 # -*- coding: utf-8 -*-
 # @Time  : 2019/12/9 10:17
 # @Author: Jtyoui@qq.com
-from .nlptimes import CharactersTime  # NLP时间解析
+from .parse_re import *
 
-__version__ = '2020.4.1'
-__author__ = 'Jtyoui'
-__description__ = '大型正则解析时间'
+__version__ = '2020.4.20'
+__author__ = '张伟'
+__description__ = '字符串时间解析'
 __email__ = 'jtyoui@qq.com'
 __names__ = 'pyUnit_time'
 __url__ = 'https://github.com/PyUnit/pyunit-time'
