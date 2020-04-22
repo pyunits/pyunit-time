@@ -3,9 +3,11 @@
 # @Time  : 2020/4/20 16:28
 # @Author: Jtyoui@qq.com
 # @Notes : 解析正则表达式，过滤无效成分，分析出哪些是时间关键词
-from .regular import TIME_RE
 import re
+import os
 
+txt = os.path.dirname(__file__) + os.sep + 're.txt'
+TIME_RE = '|'.join([i.strip() for i in open(txt, encoding='utf-8')])
 pattern = re.compile(TIME_RE)
 
 
@@ -126,10 +128,20 @@ def remove_conjunctions(string, remove_symbol=True, remove_re=None) -> str:
     return re.sub(match, '', string)
 
 
+def symbol_replace(string):
+    """符号替换"""
+    symbol = {
+        '：': ':',
+    }
+    result = re.sub(pattern='|'.join(symbol.keys()), repl=lambda x: symbol[x.group()], string=string)
+    return result
+
+
 def filters_string(string, **kwargs):
     """进行初始化过滤"""
     remove_symbol = kwargs.get('remove_symbol', True)
     remove_re = kwargs.get('remove_re', None)
+    string = symbol_replace(string)  # 符号替换
     string = remove_conjunctions(string, remove_symbol, remove_re)  # 去除时间的连接词
     string = solar_mon_to_num(string)  # 中文中的阳历月份进行转为阿拉伯数字
     string = ten_to_number(string)  # 关于中文的十的转换为阿拉伯数字

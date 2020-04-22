@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time  : 2019/12/9 10:17
 # @Author: Jtyoui@qq.com
-from .parse_re import *
+from .pytime import Time
 
 __version__ = '2020.4.20'
 __author__ = '张伟'
