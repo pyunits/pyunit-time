@@ -34,7 +34,7 @@ class Time(IObservable):
         self.observers.append(Weeks())  # 处理星期
         self.observers.append(Days())  # 处理日期
         self.observers.append(Hours())  # 处理小时
-        self.observers.append(Months())  # 处理分钟
+        self.observers.append(Minutes())  # 处理分钟
         self.observers.append(Seconds())  # 处理秒钟
 
     def parse(self, string, **kwargs) -> list:
@@ -43,7 +43,7 @@ class Time(IObservable):
         keys = filters_string(string, **kwargs)
         for key in keys:
             deal_date = self._deal_time(key)
-            dicts.append({'key': key, 'date': deal_date})
+            dicts.append({'key': key, 'keyDate': deal_date, 'baseDate': self.current_time.datetime})
         return dicts
 
     def _deal_time(self, key) -> datetime:
