@@ -3,6 +3,7 @@
 # @Time  : 2020/4/21 16:24
 # @Author: Jtyoui@qq.com
 # @Notes : 关于特殊节日的计算法则
+from pyunit_gof import IObserver
 import arrow
 import math
 import re
@@ -93,3 +94,14 @@ def special_holiday_calculation(string) -> str:
     special_holiday = '复活节|'
     result = re.sub(pattern=special_holiday, repl=lambda x: easter_holiday(x.group()), string=string)
     return result
+
+
+class SpecialHoliday(IObserver):
+    def __init__(self):
+        self.key = None
+        self.time = None
+
+    def notify(self, observable, *args, **kwargs):
+        self.key = observable.key
+        self.time = kwargs['time']
+        return self.time

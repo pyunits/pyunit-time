@@ -14,7 +14,7 @@ class Time(IObservable):
 
     def __init__(self, current_time=None):
         super().__init__()
-        self.current_time = arrow.get(current_time)
+        self.current_time = arrow.get(current_time)  # 设置当前时间
         self.key = None
         self.notify()
 
@@ -25,9 +25,20 @@ class Time(IObservable):
         self.observers.remove(observer)
 
     def notify(self, *args, **kwargs):
-        self.observers.append(Years())
+        self.observers.append(Years())  # 处理年份
+        self.observers.append(SolarHoliday())  # 处理公历的节日
+        self.observers.append(LunarHoliday())  # 处理农历的节日
+        self.observers.append(SpecialHoliday())  # 处理特殊要计算的节日
+        self.observers.append(SolarTerm24())  # 处理24节气
+        self.observers.append(Months())  # 处理月份
+        self.observers.append(Weeks())  # 处理星期
+        self.observers.append(Days())  # 处理日期
+        self.observers.append(Hours())  # 处理小时
+        self.observers.append(Months())  # 处理分钟
+        self.observers.append(Seconds())  # 处理秒钟
 
     def parse(self, string, **kwargs) -> list:
+        """处理字符串，提取时间类型"""
         dicts = []
         keys = filters_string(string, **kwargs)
         for key in keys:

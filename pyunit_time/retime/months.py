@@ -3,6 +3,8 @@
 # @Time  : 2020/4/14 17:42
 # @Author: Jtyoui@qq.com
 # @Notes : 处理月份
+from pyunit_gof import IObserver
+import re
 
 # 中国的月份对应数字
 chinese_mon_number = {
@@ -22,3 +24,14 @@ chinese_mon_number = {
     '冬': '11',
     '腊': '12',
 }
+
+
+class Months(IObserver):
+    def __init__(self):
+        self.key = None
+        self.time = None
+
+    def notify(self, observable, *args, **kwargs):
+        self.key = observable.key
+        self.time = kwargs['time']
+        return self.time

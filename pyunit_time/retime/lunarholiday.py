@@ -3,6 +3,8 @@
 # @Time  : 2020/4/14 17:44
 # @Author: Jtyoui@qq.com
 # @Notes : 处理农历的节日
+from pyunit_gof import IObserver
+import re
 
 Lunar_Holiday = {
     "中和节": "02-02",
@@ -23,3 +25,14 @@ def lunar_mon_to_num(string) -> str:
     :return:
     """
     pass
+
+
+class LunarHoliday(IObserver):
+    def __init__(self):
+        self.key = None
+        self.time = None
+
+    def notify(self, observable, *args, **kwargs):
+        self.key = observable.key
+        self.time = kwargs['time']
+        return self.time

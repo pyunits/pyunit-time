@@ -31,7 +31,7 @@ class Years(IObserver):
                 year += 1900
             elif 0 < year < 30:
                 year += 2000
-            self.time.replace(years=year)
+            self.time.replace(year=year)
 
     def deal_word_year(self):
         """处理带有文字的年份

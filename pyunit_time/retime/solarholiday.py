@@ -3,6 +3,7 @@
 # @Time  : 2020/4/14 17:44
 # @Author: Jtyoui@qq.com
 # @Notes : 处理阳历的节日
+from pyunit_gof import IObserver
 import re
 
 
@@ -47,3 +48,24 @@ def solar_holiday_to_number(string) -> str:
     solar_holiday = '|'.join(solar.keys())
     result = re.sub(pattern=solar_holiday, repl=lambda x: solar[x.group()], string=string)
     return result
+
+
+class SolarHoliday(IObserver):
+    def __init__(self):
+        self.key = None
+        self.time = None
+
+    def notify(self, observable, *args, **kwargs):
+        self.key = observable.key
+        self.time = kwargs['time']
+        self.key = solar_holiday_to_number(self.key)
+        self.deal_mon_day()
+        return self.time
+
+    def deal_mon_day(self):
+        """处理月和日"""
+        match = re.search(r'(\d+)月(\d+)日', self.key)
+        if match:
+            mon = int(match.group(1))
+            day = int(match.group(2))
+            self.time = self.time.replace(month=mon, day=day)
