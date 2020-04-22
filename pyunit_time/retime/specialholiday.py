@@ -32,7 +32,7 @@ def easter_holiday(year: [int, str]) -> str:
         else:
             mon = 3
             d += 31
-        return F'{year}年{mon}月{d}日'
+        return F'{year}-{mon}-{d}'
     else:
         raise ValueError('该算法年份只限于1900年到2099年')
 
@@ -49,7 +49,7 @@ def mother_day(year: [int, str]) -> str:
     date = arrow.get(five)
     week = date.isoweekday()
     mother = date.shift(days=14 - week)
-    return F'{mother.year}年{mother.month}月{mother.day}日'
+    return F'{mother.year}-{mother.month}-{mother.day}'
 
 
 def father_day(year: [int, str]) -> str:
@@ -64,7 +64,7 @@ def father_day(year: [int, str]) -> str:
     date = arrow.get(six)
     week = date.isoweekday()
     mother = date.shift(days=21 - week)
-    return F'{mother.year}年{mother.month}月{mother.day}日'
+    return F'{mother.year}-{mother.month}-{mother.day}'
 
 
 def thanksgiving(year: [int, str]) -> str:
@@ -80,20 +80,7 @@ def thanksgiving(year: [int, str]) -> str:
     week = date.isoweekday()
     day = (25 - week) if (4 - week) >= 0 else (32 - week)
     mother = date.shift(days=day)
-    return F'{mother.year}年{mother.month}月{mother.day}日'
-
-
-def special_holiday_calculation(string) -> str:
-    """关于特殊节日的计算法则
-
-    比如： 计算复活节， 每年过春分月圆后的第一个星期天
-
-    :param string: 包含特殊节日
-    :return: 转为具体的年月日
-    """
-    special_holiday = '复活节|'
-    result = re.sub(pattern=special_holiday, repl=lambda x: easter_holiday(x.group()), string=string)
-    return result
+    return F'{mother.year}-{mother.month}-{mother.day}'
 
 
 class SpecialHoliday(IObserver):
@@ -104,4 +91,24 @@ class SpecialHoliday(IObserver):
     def notify(self, observable, *args, **kwargs):
         self.key = observable.key
         self.time = kwargs['time']
+        self.special_holiday_calculation()
         return self.time
+
+    def special_holiday_calculation(self):
+        """关于特殊节日的计算法则
+
+        比如： 计算复活节， 每年过春分月圆后的第一个星期天
+
+        """
+        special = {
+            '复活节': easter_holiday,
+            '母亲节': mother_day,
+            '父亲节': father_day,
+            '感恩节': thanksgiving,
+        }
+        match = re.search('|'.join(special.keys()), self.key)
+        if match:
+            fun = special[match.group()]
+            date = fun(self.time.year)
+            year, mon, day = date.split('-')
+            self.time = self.time.replace(year=int(year), month=int(mon), day=int(day))
