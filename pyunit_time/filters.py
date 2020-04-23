@@ -108,7 +108,7 @@ def solar_mon_to_num(string) -> str:
     return result
 
 
-def remove_conjunctions(string, remove_symbol=True, remove_re=None) -> str:
+def remove_conjunctions(string, remove_symbol=False, remove_re=None) -> str:
     """
     去除时间的连接词
 
@@ -123,9 +123,15 @@ def remove_conjunctions(string, remove_symbol=True, remove_re=None) -> str:
     """
     if remove_re:
         match = remove_re
+        return re.sub(match, '', string)
     else:
-        match = r'\s+|的' if remove_symbol else '的'
-    return re.sub(match, '', string)
+        string = string.replace('的', '').replace('：', ':')
+        rule = r'(\d+-\d+(-\d+)?)|(\d+\.\d+(\.\d+)?)|(\d+/\d+(/\d+)?)|\d+:\d+(:\d+)?'
+        if not re.search(rule, string):
+            string = re.sub(r'\s+', '', string)
+    if remove_symbol:
+        string = re.sub(r'\s+', '', string)
+    return string
 
 
 def symbol_replace(string):
@@ -139,7 +145,7 @@ def symbol_replace(string):
 
 def filters_string(string, **kwargs):
     """进行初始化过滤"""
-    remove_symbol = kwargs.get('remove_symbol', True)
+    remove_symbol = kwargs.get('remove_symbol', False)
     remove_re = kwargs.get('remove_re', None)
     string = symbol_replace(string)  # 符号替换
     string = remove_conjunctions(string, remove_symbol, remove_re)  # 去除时间的连接词

@@ -12,9 +12,9 @@ import datetime
 
 class Time(IObservable):
 
-    def __init__(self, current_time=None, formats="YYYY-MM-DD HH:mm:ss"):
+    def __init__(self, current_time=None, format_="YYYY-MM-DD HH:mm:ss"):
         super().__init__()
-        self.format = formats
+        self.format = format_
         self.current_time = arrow.get(current_time)  # 设置当前时间
         self.key = None
         self.notify()
@@ -26,6 +26,7 @@ class Time(IObservable):
         self.observers.remove(observer)
 
     def notify(self, *args, **kwargs):
+        self.observers.append(Formats())  # 处理格式化日期
         self.observers.append(Years())  # 处理年份
         self.observers.append(SolarHoliday())  # 处理公历的节日
         self.observers.append(LunarHoliday())  # 处理农历的节日
