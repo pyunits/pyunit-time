@@ -12,8 +12,9 @@ import datetime
 
 class Time(IObservable):
 
-    def __init__(self, current_time=None):
+    def __init__(self, current_time=None, formats="YYYY-MM-DD HH:mm:ss"):
         super().__init__()
+        self.format = formats
         self.current_time = arrow.get(current_time)  # 设置当前时间
         self.key = None
         self.notify()
@@ -43,7 +44,7 @@ class Time(IObservable):
         keys = filters_string(string, **kwargs)
         for key in keys:
             deal_date = self._deal_time(key)
-            dicts.append({'key': key, 'keyDate': deal_date, 'baseDate': self.current_time.datetime})
+            dicts.append({'key': key, 'keyDate': deal_date, 'baseDate': self.current_time.format(self.format)})
         return dicts
 
     def _deal_time(self, key) -> datetime:
@@ -51,4 +52,4 @@ class Time(IObservable):
         self.key = key
         for o in self.observers:
             update_time = o.notify(self, time=update_time)
-        return update_time.datetime
+        return update_time.format(self.format)

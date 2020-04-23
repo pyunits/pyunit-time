@@ -24,7 +24,7 @@ class Days(IObserver):
         """识别12日之类的数字日期"""
         rule = r'(?<!\d)([0-3][0-9]|[1-9])(?=[日号])'
         match = re.search(rule, self.key)
-        if match is not None:
+        if match:
             day = int(match.group())
             self.time = self.time.replace(day=day)
 
@@ -33,9 +33,9 @@ class Days(IObserver):
 
         比如处理：多少天以前、多少天以后
         """
-        rule = r'\d+(?=(天|日|号)[以之]?[前后内])'
+        rule = r'\d+(?=(天|日|号)[以之]?[前后内])|(?<=[前后])\d+(?=天)'
         match = re.search(rule, self.key)
-        if match is not None:
+        if match:
             day = int(match.group())
             day = -day if ('前' in self.key) else day
             self.time = self.time.shift(days=day)
@@ -47,7 +47,6 @@ class Days(IObserver):
         """
         word = {
             '大前天': -3,
-            '[前后](\\d+)天': None,
             '前天': -2,
             '昨天': -1,
             '今天': 0,
@@ -58,9 +57,4 @@ class Days(IObserver):
         }
         match = re.finditer('|'.join(word.keys()), self.key)
         for m in match:
-            if word.get(m.group()) is None:
-                day = int(m.group(1))
-                day = -day if '前' in self.key else day
-                self.time = self.time.shift(days=day)
-            else:
-                self.time = self.time.shift(days=word[m.group()])
+            self.time = self.time.shift(days=word[m.group()])
