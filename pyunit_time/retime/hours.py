@@ -68,8 +68,17 @@ class Hours(IObserver):
 
     def set_day_hour(self):
         """设置时间能改变天数"""
-        if re.search('明晚', self.key):  # 判断明天晚上
-            self.time = self.time.shift(days=1)
+        match = re.search('(明晚)|(昨晚)|(前晚)', self.key)
+        if match:  # 判断明天晚上
+            if match.lastindex == 1:
+                day = 1
+            elif match.lastindex == 2:
+                day = -1
+            elif match.lastindex == 3:
+                day = -2
+            else:
+                day = 0
+            self.time = self.time.shift(days=day)
             if 6 <= self.time.hour <= 12:
                 self.time = self.time.shift(hours=12)
             elif self.time.hour == self.current_time.hour:
