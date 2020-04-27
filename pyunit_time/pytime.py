@@ -8,6 +8,7 @@ from .filters import filters_string
 from .retime import *
 import arrow
 import datetime
+import re
 
 
 class Time(IObservable):
@@ -16,6 +17,7 @@ class Time(IObservable):
         super().__init__()
         self.format = format_
         self.current_time = arrow.get(current_time)  # 设置当前时间
+        self.update_time = self.current_time  # 更新时间
         self.key = None
         self.notify()
 
@@ -39,9 +41,15 @@ class Time(IObservable):
         self.observers.append(Minutes())  # 处理分钟
         self.observers.append(Seconds())  # 处理秒钟
 
+    def retain_hms(self, string):
+        """是否要保留时分秒"""
+        if not re.search('这个时候|这个点', string):
+            self.update_time = self.update_time.replace(minute=0, hour=0, second=0)
+
     def parse(self, string, **kwargs) -> list:
         """处理字符串，提取时间类型"""
         dicts = []
+        self.retain_hms(string)
         keys = filters_string(string, **kwargs)
         for key in keys:
             deal_date = self._deal_time(key)
@@ -49,7 +57,7 @@ class Time(IObservable):
         return dicts
 
     def _deal_time(self, key) -> datetime:
-        update_time = self.current_time
+        update_time = self.update_time
         self.key = key
         for o in self.observers:
             update_time = o.notify(self, time=update_time)
