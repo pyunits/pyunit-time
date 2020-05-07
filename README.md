@@ -70,14 +70,14 @@ if __name__ == '__main__':
     docker run -d -p 32771:5000 pyunit-time
     
 ## 请求报文
-| **  参数名    **   | **   类型     **   | **  NULL    **   | **    说明      **   |  
-|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|   
-|    current_time        |   string       |    YES        |   输入当前时间，这里的时间是相对于分析时间而言。默认是当前时刻       |    
-|    format        |   string       |    YES        |   输入当前时间的格式，格式支持arrow时间格式。默认是: 年-月-日 时:分:秒       |    
-|    string        |   string       |    NO        |   分析一句话中的时间关键词       |     
+|**参数名**|**类型**|**是否可以为空**|**说明**|
+|------|------|-------|--------|
+|current_time|string|YES|输入当前时间，这里的时间是相对于分析时间而言。默认是当前时刻|    
+|format|string|YES|输入当前时间的格式，格式支持arrow时间格式。默认是: 年-月-日 时:分:秒|    
+|string|string|NO|分析一句话中的时间关键词|     
 
 ## 请求示例
-### cURL测试
+> ### cURL测试
 ```shell script
 curl -X POST \
 http://127.0.0.1:32771/pyunit/time \
@@ -85,7 +85,7 @@ http://127.0.0.1:32771/pyunit/time \
 -d string=去年的今天
 ```  
 
-### Python3 Requests测试
+> ### Python3 Requests测试
 ```python
 import requests
 
@@ -99,7 +99,7 @@ response = requests.request("POST", url, data=payload, headers=headers)
 print(response.text)
 ```
 
-### wget测试
+> ### wget测试
 ```shell script
 wget --quiet \
   --method POST \
@@ -109,7 +109,7 @@ wget --quiet \
   - http://127.0.0.1:32771/pyunit/time
 ```
  
-### Java测试
+> ### Java测试
 ```javascript
 HttpResponse<String> response = Unirest.post("http://127.0.0.1:32771/pyunit/time")
   .header("Content-Type", "application/x-www-form-urlencoded")
@@ -117,7 +117,7 @@ HttpResponse<String> response = Unirest.post("http://127.0.0.1:32771/pyunit/time
   .asString();
 ```
 
-### AJAX测试
+> ### AJAX测试
 ```javascript
 var settings = {
   "async": true,
