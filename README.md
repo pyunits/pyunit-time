@@ -65,5 +65,90 @@ if __name__ == '__main__':
     time()
 ```
 
+## Docker部署
+    docker pull jtyoui/pyunit-time
+    docker run -d -p 32771:5000 pyunit-time
+    
+## 请求报文
+| **  参数名    **   | **   类型     **   | **  NULL    **   | **    说明      **   | 
+|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
+|    current_time        |   string       |    YES        |   输入当前时间，这里的时间是相对于分析时间而言。默认是当前时刻       | 
+|    format        |   string       |    YES        |   输入当前时间的格式，格式支持arrow时间格式。默认是: 年-月-日 时:分:秒       | 
+|    string        |   string       |    NO        |   分析一句话中的时间关键词       | 
+
+## 请求示例
+### cURL测试
+```shell script
+curl -X POST \
+http://127.0.0.1:32771/pyunit/time \
+-H 'Content-Type: application/x-www-form-urlencoded' \
+-d string=去年的今天
+```  
+
+### Python3 Requests测试
+```python
+import requests
+
+url = "http://127.0.0.1:32771/pyunit/time"
+
+payload = "string=去年的今天"
+headers = {
+    'Content-Type': "application/x-www-form-urlencoded",
+    }
+response = requests.request("POST", url, data=payload, headers=headers)
+print(response.text)
+```
+
+### wget测试
+```shell script
+wget --quiet \
+  --method POST \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --body-data string=去年的今天 \
+  --output-document \
+  - http://127.0.0.1:32771/pyunit/time
+```
+ 
+### Java测试
+```javascript
+HttpResponse<String> response = Unirest.post("http://127.0.0.1:32771/pyunit/time")
+  .header("Content-Type", "application/x-www-form-urlencoded")
+  .body("string=去年的今天")
+  .asString();
+```
+
+### AJAX测试
+```javascript
+var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "http://127.0.0.1:32771/pyunit/time",
+  "method": "POST",
+  "headers": {
+    "Content-Type": "application/x-www-form-urlencoded",
+  },
+  "data": {
+    "string": "去年的今天"
+  }
+}
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});
+```
+
+## 返回结果
+```json
+{
+    "code": 200,
+    "result": [
+        {
+            "baseDate": "2020-05-07 09:44:14",
+            "key": "去年今天",
+            "keyDate": "2019-05-07 00:00:00"
+        }
+    ]
+}
+```
 ***
 [1]: https://blog.jtyoui.com
