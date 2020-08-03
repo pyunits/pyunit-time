@@ -3,12 +3,14 @@
 # @Time  : 2020/4/21 17:19
 # @Author: Jtyoui@qq.com
 # @Notes : 处理中文时间
-from pyunit_gof import IObservable, IObserver
-from .filters import filters_string
-from .retime import *
-import arrow
 import datetime
 import re
+
+import arrow
+from pyunit_gof import IObservable, IObserver
+
+from .filters import filters_string
+from .retime import *
 
 
 class Time(IObservable):
@@ -53,7 +55,10 @@ class Time(IObservable):
         keys = filters_string(string, **kwargs)
         for key in keys:
             deal_date = self._deal_time(key)
-            dicts.append({'key': key, 'keyDate': deal_date, 'baseDate': self.current_time.format(self.format)})
+            if deal_date == self.update_time and ('今' not in key):  # 没有更新时间
+                continue
+            dicts.append({'key': key, 'keyDate': deal_date.format(self.format),
+                          'baseDate': self.current_time.format(self.format)})
         return dicts
 
     def _deal_time(self, key) -> datetime:
@@ -61,4 +66,4 @@ class Time(IObservable):
         self.key = key
         for o in self.observers:
             update_time = o.notify(self, time=update_time)
-        return update_time.format(self.format)
+        return update_time

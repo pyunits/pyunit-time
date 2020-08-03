@@ -1,0 +1,40 @@
+name: Time
+
+on: [push]
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 下载代码
+        uses: actions/checkout@master
+
+      - name: 下载Python环境
+        uses: actions/setup-python@master
+        with:
+          python-version: '3.8'
+
+      - name: 初始化Python
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel twine
+
+      - name: 构建Python包并上传到PYPI
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: |
+          pip install -r requirements.txt
+          python setup.py sdist bdist_wheel
+          twine upload dist/*
+
+      - name: 构建Docker并上传到DockerHub
+        uses: docker/build-push-action@v1.1.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: jtyoui/pyunit-time
+          tag_with_ref: true
+          tag_with_sha: true
