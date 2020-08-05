@@ -4,7 +4,7 @@
 # @Author: Jtyoui@qq.com
 from .pytime import Time
 
-__version__ = '2020.8.3'
+__version__ = '2020.8.5'
 __author__ = '张伟'
 __description__ = '字符串时间解析'
 __email__ = 'jtyoui@qq.com'
