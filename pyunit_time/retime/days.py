@@ -15,10 +15,23 @@ class Days(IObserver):
     def notify(self, observable, *args, **kwargs):
         self.key = observable.key
         self.time = kwargs['time']
+        self.set_replace_day()
         self.set_number_day()
         self.set_shift_day()
         self.deal_word_day()
         return self.time
+
+    def set_replace_day(self):
+        """处理替换的天数"""
+        rule = r'(?<=最后)(\d+)(?=天)|(?<=第)(\d+)(?=天)'
+        match = re.search(rule, self.key)
+        if match:
+            day = int(match.group())
+            if match.lastindex == 2:  # 第x天
+                replace_day = day
+            else:  # 最后x天
+                replace_day = self.time.ceil('month').date().day - day + 1
+            self.time = self.time.replace(day=replace_day)
 
     def set_number_day(self):
         """识别12日之类的数字日期"""
@@ -33,8 +46,8 @@ class Days(IObserver):
 
         比如处理：多少天以前、多少天以后
         """
-        rule = r'\d+(?=(天|日|号)[以之]?[前后内])|(?<=[前后])\d+(?=天)'
-        match = re.search(rule, self.key)
+        rule = r'\d+(?=(天|日|号)[以之]?[前后内])|(?<=[^最]后)\d+(?=天)|(?<=前)\d+(?=天)'
+        match = re.search(rule, '@' + self.key)  # 加上@是保证后x天不是第一个出现的字符，满足[^最]后语法
         if match:
             day = int(match.group())
             day = -day if ('前' in self.key) else day

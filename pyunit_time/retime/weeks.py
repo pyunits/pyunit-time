@@ -69,19 +69,26 @@ class Weeks(IObserver):
 
         比如： 第1个星期2
         """
-        rule = '第([1-5])个?(?:周|星期|礼拜)([1-7天日])'
+        rule = '(?<=[第最后])([1-5])个?(?:周|星期|礼拜)([1-7天日])'
         match = re.search(rule, self.key)
         if match:
-            fth = int(match.group(1))
-            day = match.group(2)
-            if not day.isdigit():
-                day = 7
-            else:
-                day = int(day)
-            self.time = self.time.replace(day=1)
-            if day == self.time.isoweekday():
-                fth -= 1
+            fth = int(match.group(1))  # 替换x个周
+            day = match.group(2)  # 获取星期x
+            day = 7 if not day.isdigit() else int(day)
+
+            if '最后' in self.key:
+                self.time = self.time.shift(months=1)
+
+            self.time = self.time.replace(day=1)  # 更改时间为当月第一天
+            current_week = self.time.isoweekday()  # 获取当月第一天是星期几
+
+            # 如果当前星期刚好是当月第一天，那么替换的周数少一
+            several_days = day - current_week  # 还差多少天就是星期x
+            self.time = self.time.shift(days=several_days)
+
+            if '第' in self.key:  # 这个是往前推
+                fth -= 1 if several_days >= 0 else 0
                 self.time = self.time.shift(weeks=fth)
-            else:
-                days = self.time.isoweekday() - day
-                self.time = self.time.shift(weeks=fth, days=days)
+            else:  # 这个是往后推
+                fth -= 0 if several_days >= 0 else 1
+                self.time = self.time.shift(weeks=-fth)

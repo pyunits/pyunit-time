@@ -11,10 +11,12 @@ class Years(IObserver):
     def __init__(self):
         self.key = None
         self.time = None
+        self.current_year = None
 
     def notify(self, observable, *args, **kwargs):
         self.key = observable.key
         self.time = kwargs['time']
+        self.current_year = observable.current_time.year % 100  # 获取现在年
         self.deal_number_year()
         self.deal_word_year()
         self.set_shift_year()
@@ -28,9 +30,9 @@ class Years(IObserver):
         match = re.search(r'([12]\d{3}|\d{2})(?=年)', self.key)
         if match:
             year = int(match.group())
-            if 30 <= year < 100:
+            if self.current_year < year < 100:
                 year += 1900
-            elif 0 < year < 30:
+            elif 0 <= year <= self.current_year:
                 year += 2000
             self.time = self.time.replace(year=year)
 
