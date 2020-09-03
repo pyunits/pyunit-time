@@ -18,7 +18,7 @@ class Time(IObservable):
     def __init__(self, current_time=None, format_="YYYY-MM-DD HH:mm:ss"):
         super().__init__()
         self.format = format_
-        self.current_time = arrow.get(current_time)  # 设置当前时间
+        self.current_time = arrow.get(current_time) if current_time else arrow.now()  # 设置当前时间
         self.update_time = self.current_time  # 更新时间
         self.key = None
         self.notify()
