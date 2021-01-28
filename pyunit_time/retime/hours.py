@@ -91,4 +91,4 @@ class Hours(IObserver):
         if match:
             h = int(match.group())
             h = -h if ('前' in self.key) else h
-            self.time = self.time.shift(hour=h)
+            self.time = self.time.shift(hours=h)
