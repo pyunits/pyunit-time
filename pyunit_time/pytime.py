@@ -51,7 +51,7 @@ class Time(IObservable):
     def parse(self, string, **kwargs) -> list:
         """处理字符串，提取时间类型"""
         dicts = []
-        self.retain_hms(string)
+        # self.retain_hms(string)
         keys = filters_string(string, **kwargs)
         for key in keys:
             deal_date = self._deal_time(key)

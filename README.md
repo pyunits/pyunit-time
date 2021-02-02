@@ -1,14 +1,16 @@
 # **pyUnit_time** [![](https://gitee.com/tyoui/logo/raw/master/logo/photolog.png)][1]
 
 ## 处理时间模块集合
+
 [![](https://img.shields.io/badge/Python-3.8-green.svg)](https://pypi.org/project/pyunit-time/)
 [![](https://img.shields.io/badge/Email-jtyoui@qq.com-red.svg)]()
 
-
 ### 安装
+
     pip install pyunit-time
 
 ## 测试
+
 ```python
 from pyunit_time import Time
 
@@ -66,89 +68,34 @@ if __name__ == '__main__':
 ```
 
 ## Docker部署
+
     docker pull jtyoui/pyunit-time
-    docker run -d -p 32771:5000 pyunit-time
-    
+    docker run -d -p 32771:80 pyunit-time
+
+## Swagger在线api文档
+
+    http://localhost:32771/docs
+
+![测试](./.github/photo.png)
+
 ## 请求报文
+
 |**参数名**|**类型**|**是否可以为空**|**说明**|
 |------|------|-------|--------|
-|current_time|string|YES|输入当前时间，这里的时间是相对于分析时间而言。默认是当前时刻|    
-|format|string|YES|输入当前时间的格式，格式支持arrow时间格式。默认是: 年-月-日 时:分:秒|    
-|string|string|NO|分析一句话中的时间关键词|     
+|current_time|string|YES|输入当前时间，这里的时间是相对于分析时间而言。默认是当前时刻|
+|data|string|NOT|分析一句话中的时间关键词|     
 
-## 请求示例
-> ### cURL测试
-```shell script
-curl -X POST \
-http://127.0.0.1:32771/pyunit/time \
--H 'Content-Type: application/x-www-form-urlencoded' \
--d string=去年的今天
-```  
+## 返回报文
 
-> ### Python3 Requests测试
-```python
-import requests
+|**参数名**|**类型**|**是否可以为空**|**说明**|
+|------|------|-------|--------|
+|msg|string|NOT|错误信息|
+|code|INT|NOT|状态码，正确为200，错误为0|     
+|result|string|NOT|结果信息，列表|     
+|baseDate|string|NOT|开始时间|     
+|key|string|NOT|时间关键字|     
+|keyDate|string|NOT|关键字分析出来的时间|     
 
-url = "http://127.0.0.1:32771/pyunit/time"
-
-payload = "string=去年的今天"
-headers = {
-    'Content-Type': "application/x-www-form-urlencoded",
-    }
-response = requests.request("POST", url, data=payload, headers=headers)
-print(response.text)
-```
-
-> ### wget测试
-```shell script
-wget --quiet \
-  --method POST \
-  --header 'Content-Type: application/x-www-form-urlencoded' \
-  --body-data string=去年的今天 \
-  --output-document \
-  - http://127.0.0.1:32771/pyunit/time
-```
- 
-> ### Java测试
-```javascript
-HttpResponse<String> response = Unirest.post("http://127.0.0.1:32771/pyunit/time")
-  .header("Content-Type", "application/x-www-form-urlencoded")
-  .body("string=去年的今天")
-  .asString();
-```
-
-> ### AJAX测试
-```javascript
-var settings = {
-  "async": true,
-  "crossDomain": true,
-  "url": "http://127.0.0.1:32771/pyunit/time",
-  "method": "POST",
-  "headers": {
-    "Content-Type": "application/x-www-form-urlencoded",
-  },
-  "data": {
-    "string": "去年的今天"
-  }
-}
-
-$.ajax(settings).done(function (response) {
-  console.log(response);
-});
-```
-
-## 返回结果
-```json
-{
-    "code": 200,
-    "result": [
-        {
-            "baseDate": "2020-05-07 09:44:14",
-            "key": "去年今天",
-            "keyDate": "2019-05-07 00:00:00"
-        }
-    ]
-}
-```
 ***
+
 [1]: https://blog.jtyoui.com

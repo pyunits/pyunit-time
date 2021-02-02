@@ -34,11 +34,13 @@ class Formats(IObserver):
                 f = '/'
             try:
                 group = match.group().split(f)
-                if len(group) == 2:
-                    data = F'{group[0]}-{group[1]:0>2}'
-                else:
-                    data = match.group()
-                self.time = arrow.get(data)
+                if len(group) >= 1 and 1000 < int(group[0]) < 3000:  # 判断年
+                    if len(group) >= 2 and 0 < int(group[1]) <= 12:  # 判断月
+                        if len(group) == 3 and 0 < int(group[2]) <= 31:  # 判断日。可以不存在
+                            data = match.group()
+                        else:
+                            data = F'{group[0]}-{group[1]:0>2}'
+                        self.time = arrow.get(data)
             except arrow.parser.ParserError:
                 pass
         rule = r'\d+:\d+(:\d+)?'
