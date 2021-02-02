@@ -92,3 +92,9 @@ class Hours(IObserver):
             h = int(match.group())
             h = -h if ('前' in self.key) else h
             self.time = self.time.shift(hours=h)
+
+        rule = r'(在|再)过(\d+)小时'
+        match = re.search(rule, self.key)
+        if match:
+            h = int(match.group(2))
+            self.time = self.time.shift(hours=h)
