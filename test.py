@@ -88,5 +88,9 @@ def time():
         {'key': '再过8小时', 'keyDate': '2020-09-20 18:10:10', 'baseDate': '2020-09-20 10:10:10'}]
 
 
+def company():
+    print(Time('2021-3-4 20:00:00').parse('请陈小利、苏杨星期三早上10点在省公司参加安全培训'))
+
+
 if __name__ == '__main__':
-    time()
+    company()

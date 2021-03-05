@@ -1,6 +1,9 @@
 name: Time
 
-on: [ push ]
+on:
+  push:
+    paths:
+      - 'pyunit_time/__init__.py'
 
 jobs:
   deploy:

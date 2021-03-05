@@ -3,7 +3,7 @@
 # @Time  : 2020/4/14 17:47
 # @Author: Jtyoui@qq.com
 # @Notes : 处理星期
-from pyunit_gof import IObserver
+from ..observer import IObserver
 import re
 
 
@@ -11,14 +11,35 @@ class Weeks(IObserver):
     def __init__(self):
         self.key = None
         self.time = None
+        self.future = None
 
     def notify(self, observable, *args, **kwargs):
         self.key = observable.key
         self.time = kwargs['time']
+        self.future = observable.is_future
         self.set_number_week()
         self.week_fth()
         self.set_shift_week()
         return self.time
+
+    def future_week(self, day, current):
+        """处理超过了当前的星期，比如：今天是星期四，问星期三，那么星期三应当为未来时间，即下周星期三
+        answer week over the current week,eg: answer Wednesday, today Thursday. answer Wednesday is next Week Wednesday
+        """
+        flag_day = day.isdigit()
+        if flag_day:
+            int_day = int(day)
+            if self.future:
+                if int_day < current:  # 当前日期超过了询问的日期
+                    days = int_day + 7 - current
+                    return days
+            days = int_day - current
+        else:
+            if self.future and current == 7:
+                days = 7
+            else:
+                days = 7 - current
+        return days
 
     def set_number_week(self):
         """设置星期
@@ -58,10 +79,7 @@ class Weeks(IObserver):
             match = re.search(rule, self.key)
             if match:
                 day = match.group(1)
-                if day.isdigit():
-                    days = int(day) - current_week
-                else:
-                    days = 7 - current_week
+                days = self.future_week(day, current_week)
                 self.time = self.time.shift(days=days)
 
     def week_fth(self):

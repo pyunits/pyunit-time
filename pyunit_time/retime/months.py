@@ -3,7 +3,7 @@
 # @Time  : 2020/4/14 17:42
 # @Author: Jtyoui@qq.com
 # @Notes : 处理月份
-from pyunit_gof import IObserver
+from ..observer import IObserver
 import re
 
 # 中国的月份对应数字

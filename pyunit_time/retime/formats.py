@@ -3,7 +3,7 @@
 # @Time  : 2020/4/23 13:59
 # @Author: Jtyoui@qq.com
 # @Notes : 处理格式化字符串
-from pyunit_gof import IObserver
+from ..observer import IObserver
 import arrow
 import re
 

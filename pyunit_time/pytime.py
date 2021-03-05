@@ -7,7 +7,7 @@ import datetime
 import re
 
 import arrow
-from pyunit_gof import IObservable, IObserver
+from .observer import IObservable, IObserver
 
 from .filters import filters_string
 from .retime import *
@@ -15,12 +15,18 @@ from .retime import *
 
 class Time(IObservable):
 
-    def __init__(self, current_time=None, format_="YYYY-MM-DD HH:mm:ss"):
+    def __init__(self, current_time=None, format_time="YYYY-MM-DD HH:mm:ss", future=True):
+        """
+        :param current_time: set current datetime (base datetime) 设置当前日期
+        :param format_time: current datetime standard format 格式化化当前日期
+        :param future: Is it predictable in datetime 是否支持日期预测
+        """
         super().__init__()
-        self.format = format_
+        self.format = format_time
         self.current_time = arrow.get(current_time) if current_time else arrow.now()  # 设置当前时间
         self.update_time = self.current_time  # 更新时间
         self.key = None
+        self.is_future = future
         self.notify()
 
     def subscribe(self, observer: IObserver):

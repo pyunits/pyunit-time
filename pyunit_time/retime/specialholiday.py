@@ -3,7 +3,7 @@
 # @Time  : 2020/4/21 16:24
 # @Author: Jtyoui@qq.com
 # @Notes : 关于特殊节日的计算法则
-from pyunit_gof import IObserver
+from ..observer import IObserver
 import arrow
 import math
 import re

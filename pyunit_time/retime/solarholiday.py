@@ -3,7 +3,7 @@
 # @Time  : 2020/4/14 17:44
 # @Author: Jtyoui@qq.com
 # @Notes : 处理阳历的节日
-from pyunit_gof import IObserver
+from ..observer import IObserver
 import re
 
 

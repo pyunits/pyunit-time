@@ -3,7 +3,7 @@
 # @Time  : 2020/4/14 17:46
 # @Author: Jtyoui@qq.com
 # @Notes : 处理24时节
-from pyunit_gof import IObserver
+from ..observer import IObserver
 import re
 
 

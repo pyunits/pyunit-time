@@ -3,8 +3,8 @@
 # @Time  : 2020/4/14 17:44
 # @Author: Jtyoui@qq.com
 # @Notes : 处理农历的节日
-from pyunit_gof import IObserver
-from pyunit_calendar import LunarSolarDateConverter, LunarDate
+from ..observer import IObserver
+from ..pyunit_calendar import LunarSolarDateConverter, LunarDate
 import re
 
 Lunar_Holiday = {
