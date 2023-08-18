@@ -4,9 +4,10 @@
 # @Author: Jtyoui@qq.com
 # @Notes :  restful 启动
 from fastapi import FastAPI, Query
-from pyunit_time import Time
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
+from pyunit_time import Time
 
 app = FastAPI(title='时间抽取', description='基于规则抽取、时间抽取接口文档', version='1.0')
 
@@ -38,7 +39,7 @@ def py_time(current_time: str = Query(None, description='填写你认为的开�
                                       title='2020-4-22 00:00:00'),
             data: str = Query(..., description='输入要分析的语句', title='一个小时前')):
     try:
-        time = Time(current_time=current_time, format_='YYYY-MM-DD HH:mm:ss').parse(string=data)
+        time = Time(current_time=current_time, format_time='YYYY-MM-DD HH:mm:ss').parse(string=data)
         return ResponseModal(result=time)
     except Exception as e:
         return ResponseModal(msg=str(e), code=0)
