@@ -26,8 +26,8 @@ jobs:
 
       - name: 构建Python包并上传到PYPI
         env:
-          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.TOKEN }}
         run: |
           pip install -r requirements.txt
           python setup.py sdist bdist_wheel
