@@ -41,7 +41,7 @@ class Time(IObservable):
         self.observers.append(SolarHoliday())  # 处理公历的节日
         self.observers.append(LunarHoliday())  # 处理农历的节日
         self.observers.append(SpecialHoliday())  # 处理特殊要计算的节日
-        self.observers.append(SolarTerm24())  # 处理24节气
+        self.observers.append(SolarTerm24())  # 处理24个节气
         self.observers.append(Months())  # 处理月份
         self.observers.append(Weeks())  # 处理星期
         self.observers.append(Days())  # 处理日期

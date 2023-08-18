@@ -3,8 +3,9 @@
 # @Time  : 2020/4/14 17:42
 # @Author: Jtyoui@qq.com
 # @Notes : 处理年份
-from ..observer import IObserver
 import re
+
+from ..observer import IObserver
 
 
 class Years(IObserver):
@@ -12,14 +13,15 @@ class Years(IObserver):
         self.key = None
         self.time = None
         self.current_year = None
+        self.final = False  # 增加最终判断条件，当是True时跳过该属性判断
 
     def notify(self, observable, *args, **kwargs):
         self.key = observable.key
         self.time = kwargs['time']
         self.current_year = observable.current_time.year % 100  # 获取现在年
+        self.set_shift_year()
         self.deal_number_year()
         self.deal_word_year()
-        self.set_shift_year()
         return self.time
 
     def deal_number_year(self):
@@ -28,7 +30,7 @@ class Years(IObserver):
         比如： 两位数字的年份只能是19年或者2019年
         """
         match = re.search(r'([12]\d{3}|\d{2})(?=年)', self.key)
-        if match:
+        if match and (not self.final):
             year = int(match.group())
             if self.current_year < year < 100:
                 year += 1900
@@ -66,3 +68,4 @@ class Years(IObserver):
             year = int(match.group())
             year = -year if ('前' in self.key) else year
             self.time = self.time.shift(years=year)
+            self.final = True

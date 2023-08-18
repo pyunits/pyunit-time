@@ -3,8 +3,9 @@
 # @Time  : 2020/4/14 17:47
 # @Author: Jtyoui@qq.com
 # @Notes : 处理星期
-from ..observer import IObserver
 import re
+
+from ..observer import IObserver
 
 
 class Weeks(IObserver):
@@ -12,6 +13,7 @@ class Weeks(IObserver):
         self.key = None
         self.time = None
         self.future = None
+        self.final = False  # 增加最终属性，如果是 True，表示该属性已经是最终结果，不在继续判断
 
     def notify(self, observable, *args, **kwargs):
         self.key = observable.key
@@ -77,7 +79,7 @@ class Weeks(IObserver):
         else:
             rule = r'(?:周|星期|礼拜)([1-7天日]?)'
             match = re.search(rule, self.key)
-            if match:
+            if match and (not self.final):  # 替换星期和 week_fth 有重复的可能，需要判断是否不在继续替换
                 day = match.group(1)
                 days = self.future_week(day, current_week)
                 self.time = self.time.shift(days=days)
@@ -110,3 +112,5 @@ class Weeks(IObserver):
             else:  # 这个是往后推
                 fth -= 0 if several_days >= 0 else 1
                 self.time = self.time.shift(weeks=-fth)
+
+            self.final = True
