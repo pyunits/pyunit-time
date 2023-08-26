@@ -1,6 +1,8 @@
-# **pyUnit_time** [![](https://gitee.com/tyoui/logo/raw/master/logo/photolog.png)][1]
+# **pyUnit_time**
 
-## 处理时间模块集合
+    介绍： 基于Python实现的、中文字符串解析时间。输入当前时刻，在输入一句中文语句，
+          自动推导语句所表达的下一个时刻。
+          比如：当前时刻是2020年4月22日，输入：这个月的第三个星期日是哪天？输出：2020年4月19日。
 
 [![](https://img.shields.io/badge/Python-3.8-green.svg)](https://pypi.org/project/pyunit-time/)
 [![](https://img.shields.io/badge/Email-jtyoui@qq.com-red.svg)]()
@@ -8,6 +10,16 @@
 ### 安装
 
     pip install pyunit-time
+
+### 推导类型
+
+1. 年、月、日、时、分、秒
+2. 周、天
+3. 中国节日
+4. 国外特殊节日
+5. 农历、阳历
+6. 天干地支
+7. 二十四节气
 
 ## 测试
 
@@ -66,36 +78,3 @@ def time():
 if __name__ == '__main__':
     time()
 ```
-
-## Docker部署
-
-    docker pull jtyoui/pyunit-time
-    docker run -d -p 32771:80 pyunit-time
-
-## Swagger在线api文档
-
-    http://localhost:32771/docs
-
-![测试](./.github/photo.png)
-
-## 请求报文
-
-|**参数名**|**类型**|**是否可以为空**|**说明**|
-|------|------|-------|--------|
-|current_time|string|YES|输入当前时间，这里的时间是相对于分析时间而言。默认是当前时刻|
-|data|string|NOT|分析一句话中的时间关键词|     
-
-## 返回报文
-
-|**参数名**|**类型**|**是否可以为空**|**说明**|
-|------|------|-------|--------|
-|msg|string|NOT|错误信息|
-|code|INT|NOT|状态码，正确为200，错误为0|     
-|result|string|NOT|结果信息，列表|     
-|baseDate|string|NOT|开始时间|     
-|key|string|NOT|时间关键字|     
-|keyDate|string|NOT|关键字分析出来的时间|     
-
-***
-
-[1]: https://blog.jtyoui.com

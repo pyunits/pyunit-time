@@ -32,12 +32,3 @@ jobs:
           pip install -r requirements.txt
           python setup.py sdist bdist_wheel
           twine upload dist/*
-
-      - name: 构建Docker并上传到DockerHub
-        uses: docker/build-push-action@v1.1.0
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: jtyoui/pyunit-time
-          tag_with_ref: true
-          tag_with_sha: true
