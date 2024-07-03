@@ -9,10 +9,6 @@ jobs:
   deploy:
 
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [ "3.8","3.9", "3.10", "3.11" ]
 
     steps:
       - name: 下载代码
@@ -21,7 +17,7 @@ jobs:
       - name: 下载Python环境
         uses: actions/setup-python@master
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.8"
 
       - name: 下载依赖
         run: |
